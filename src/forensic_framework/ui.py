@@ -135,7 +135,7 @@ st.set_page_config(
 )
 
 # API base URL
-API_URL = "http://localhost:8000"
+API_URL = "http://127.0.0.1:8000"
 
 logger.info("Streamlit UI started", extra={"action": "app_start", "data": {"api_url": API_URL}})
 
