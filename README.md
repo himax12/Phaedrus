@@ -1,135 +1,162 @@
-# AI-Powered Forensic Log Investigation Framework
+AI-Powered Forensic Log Investigation Framework
 
-A next-generation log investigation system using Ollama and open-source tools. Transform raw logs into structured evidence, ensure forensic integrity via Merkle Trees, and provide explainable AI insights.
+A next-generation log investigation system using Ollama and open-source tools.
+It transforms raw logs into structured forensic evidence, ensures integrity using Merkle Trees, and provides explainable AI insights suitable for audits, incident response, and legal proceedings.
 
-## Features
+Features
 
-- **🔍 Intelligent Log Parsing**: Drain3-powered automated template extraction
-- **🔐 Forensic Integrity**: Merkle Tree logchain with tamper detection
-- **🤖 AI Correlation**: Anomaly detection and attack path reconstruction
-- **💬 Natural Language Queries**: Ollama-powered Text-to-SQL agent
-- **📊 Explainability**: SHAP waterfall plots for AI decisions
-- **📄 ISO 27037 Reports**: Court-ready forensic documentation
+Intelligent log parsing using Drain3 automated template extraction
 
-## Tech Stack
+Forensic integrity via Merkle Tree–based logchain with tamper detection
 
-| Component | Tool |
-|-----------|------|
-| LLM | Ollama (llama3.2) |
-| Log Parsing | Drain3 |
-| Explainability | SHAP |
-| Graph Analysis | NetworkX |
-| API | FastAPI |
-| Database | SQLite (dev) / ClickHouse (prod) |
-| Reports | Jinja2 + WeasyPrint |
+AI-driven anomaly detection and attack path reconstruction
 
-## Quick Start
+Natural language investigation using an Ollama-powered Text-to-SQL agent
 
-### Prerequisites
+Explainable AI decisions using SHAP waterfall plots
 
-- Python 3.11+
-- [uv](https://github.com/astral-sh/uv) (fast Python package manager)
-- [Ollama](https://ollama.ai/) with a model pulled (e.g., `ollama pull llama3.2`)
+ISO 27037–aligned, court-ready forensic reports
 
-##Architecture
----
-config:
-  layout: elk
-  look: classic
-  theme: redux
----
+Tech Stack
+Component	Tool
+LLM	Ollama (llama3.2)
+Log Parsing	Drain3
+Explainability	SHAP
+Graph Analysis	NetworkX
+API	FastAPI
+Database	SQLite (dev) / ClickHouse (prod)
+Reports	Jinja2 + WeasyPrint
+UI	Streamlit
+Architecture (Mermaid.js)
 flowchart TB
-    A["User/UI/API submits logs"] --> B["Drain3 Log Parser"]
-    B --> C["Parsed Templates & Entities"]
-    C --> D["Logchain (Merkle Tree) Integrity Block"] & F["Ollama AI Engine: Anomaly Detection/Text-to-SQL"]
-    D --> E["Verify Integrity / Tamper Detection"] & J["ISO 27037 PDF Report Generator"]
-    F --> G["Query Results: Correlations, Anomalies"]
-    G --> H["SHAP Explainability Engine"] & J
-    H --> I["Feature-wise Explanation & Visualizations"]
+    A["User / UI / API submits logs"]
+    B["Drain3 Log Parser"]
+    C["Parsed Templates & Entities"]
+    D["Merkle Tree Logchain"]
+    E["Integrity Verification"]
+    F["Ollama AI Engine (Anomaly Detection / Text-to-SQL)"]
+    G["Correlations & Anomalies"]
+    H["SHAP Explainability Engine"]
+    I["Feature-wise Explanations"]
+    J["ISO 27037 PDF Report Generator"]
+    K["FastAPI Backend (/ingest, /query, /verify, /report)"]
+    L["Streamlit UI"]
+
+    A --> K
+    K --> B
+    B --> C
+    C --> D
+    C --> F
+    D --> E
+    F --> G
+    G --> H
+    H --> I
+
+    E --> J
     I --> J
-    A -.-> K["FastAPI Backend: /ingest, /query, /verify, /report"]
-    D -.-> K
-    F -.-> K
-    J -.-> K
-    K --> L["Streamlit UI"]
+    G --> J
 
-### Installation
+    J --> K
+    K --> L
 
-```bash
-# Clone and enter the project
+Quick Start
+Prerequisites
+
+Python 3.11+
+
+uv (fast Python package manager)
+
+Ollama with a model pulled
+
+ollama pull llama3.2
+
+Installation
+# Enter the project
 cd forensic_framework
 
-# Install dependencies with uv
+# Install dependencies
 uv sync
 
-# Install dev dependencies
+# Install development dependencies
 uv sync --extra dev
 
-# (Optional) Install ML dependencies for LogBERT
+# Optional: ML dependencies
 uv sync --extra ml
-```
 
-### Running the API
-
-```bash
-# Start the FastAPI server
+Running the API
 uv run uvicorn src.forensic_framework.main:app --reload --port 8000
-```
 
-### Running Tests
 
-```bash
+Available endpoints:
+
+/ingest
+
+/query
+
+/verify
+
+/report
+
+Running Tests
 uv run pytest tests/ -v
-```
 
-## Project Structure
-
-```
+Project Structure
 forensic_framework/
 ├── src/forensic_framework/
-│   ├── ingestion/       # Drain3 log parsing
-│   ├── integrity/       # Merkle Tree logchain
-│   ├── ai_engine/       # Ollama agent, anomaly detection
-│   ├── explainability/  # SHAP visualizations
-│   ├── reporting/       # ISO 27037 PDF reports
-│   ├── api/             # FastAPI routes
-│   └── storage/         # Database layer
+│   ├── ingestion/        # Drain3 log parsing
+│   ├── integrity/        # Merkle Tree logchain
+│   ├── ai_engine/        # Ollama agents and anomaly detection
+│   ├── explainability/   # SHAP visualizations
+│   ├── reporting/        # ISO 27037 PDF reports
+│   ├── api/              # FastAPI routes
+│   └── storage/          # Database layer
 ├── tests/
 └── pyproject.toml
-```
 
-## Usage Examples
-
-### Parse Logs with Drain3
-
-```python
+Usage Examples
+Parse Logs with Drain3
 from forensic_framework.ingestion import DrainParser
 
 parser = DrainParser()
-result = parser.parse("Failed password for root from 192.168.1.100 port 22 ssh2")
-print(result.template)  # "Failed password for <*> from <*> port <*> ssh2"
-```
+result = parser.parse(
+    "Failed password for root from 192.168.1.100 port 22 ssh2"
+)
 
-### Verify Log Integrity
+print(result.template)
+# Failed password for <*> from <*> port <*> ssh2
 
-```python
+Verify Log Integrity
 from forensic_framework.integrity import LogChain
 
 chain = LogChain()
 chain.add_evidence_block(logs)
-is_valid = chain.verify()  # Returns False if tampered
-```
 
-### Natural Language Query
+is_valid = chain.verify()
+# Returns False if logs were tampered
 
-```python
+Natural Language Query
 from forensic_framework.ai_engine import OllamaAgent
 
 agent = OllamaAgent()
-result = agent.query("Show me all failed SSH logins from yesterday")
-# Generates safe SQL and returns results
-```
+result = agent.query(
+    "Show me all failed SSH logins from yesterday"
+)
 
-## License
 
-MIT
+The agent converts intent into safe SQL and returns structured results.
+
+Forensic Guarantees
+
+Deterministic evidence hashing
+
+Tamper-evident chain of custody
+
+Explainable AI decisions
+
+ISO 27037–aligned reporting
+
+The system prioritizes verifiability over prediction.
+
+License
+
+MIT License
