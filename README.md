@@ -31,7 +31,7 @@ It transforms raw logs into structured forensic evidence, ensures integrity usin
 
 ---
 
-## Architecture (Mermaid.js)
+## Architecture 
 
 ```mermaid
 flowchart TB
