@@ -31,6 +31,28 @@ A next-generation log investigation system using Ollama and open-source tools. T
 - [uv](https://github.com/astral-sh/uv) (fast Python package manager)
 - [Ollama](https://ollama.ai/) with a model pulled (e.g., `ollama pull llama3.2`)
 
+##Architecture
+---
+config:
+  layout: elk
+  look: classic
+  theme: redux
+---
+flowchart TB
+    A["User/UI/API submits logs"] --> B["Drain3 Log Parser"]
+    B --> C["Parsed Templates & Entities"]
+    C --> D["Logchain (Merkle Tree) Integrity Block"] & F["Ollama AI Engine: Anomaly Detection/Text-to-SQL"]
+    D --> E["Verify Integrity / Tamper Detection"] & J["ISO 27037 PDF Report Generator"]
+    F --> G["Query Results: Correlations, Anomalies"]
+    G --> H["SHAP Explainability Engine"] & J
+    H --> I["Feature-wise Explanation & Visualizations"]
+    I --> J
+    A -.-> K["FastAPI Backend: /ingest, /query, /verify, /report"]
+    D -.-> K
+    F -.-> K
+    J -.-> K
+    K --> L["Streamlit UI"]
+
 ### Installation
 
 ```bash
